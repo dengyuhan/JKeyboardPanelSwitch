@@ -94,4 +94,14 @@
         android:padding="5dp"
         android:text="@string/activity_chatting_unresolved_title"/>
 
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickDialogExample"
+        android:padding="5dp"
+        android:textAllCaps="false"
+        android:text="@string/activity_dialog_example"/>
+
 </LinearLayout>

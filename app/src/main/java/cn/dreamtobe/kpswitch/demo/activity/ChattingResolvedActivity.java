@@ -122,7 +122,7 @@ public class ChattingResolvedActivity extends AppCompatActivity {
         // ********* Above code Just for Demo Test, do not need to adapt in your code. ************
 
 
-        KeyboardUtil.attach(this, mPanelRoot,
+        KeyboardUtil.attach(getWindow(), mPanelRoot,
                 // Add keyboard showing state callback, do like this when you want to listen in the
                 // keyboard's show/hide change.
                 new KeyboardUtil.OnKeyboardShowingListener() {
@@ -135,7 +135,7 @@ public class ChattingResolvedActivity extends AppCompatActivity {
 
         if (isMultiSubPanel) {
             // If there are several sub-panels in this activity ( e.p. function-panel, emoji-panel).
-            KPSwitchConflictUtil.attach(mPanelRoot, mSendEdt,
+            KPSwitchConflictUtil.attach(getWindow(), mPanelRoot, mSendEdt,
                     new KPSwitchConflictUtil.SwitchClickListener() {
                         @Override
                         public void onClickSwitch(View v, boolean switchToPanel) {
@@ -150,7 +150,7 @@ public class ChattingResolvedActivity extends AppCompatActivity {
                     new KPSwitchConflictUtil.SubPanelAndTrigger(mSubPanel2, mPlusIv2));
         } else {
             // In the normal case.
-            KPSwitchConflictUtil.attach(mPanelRoot, mPlusIv, mSendEdt,
+            KPSwitchConflictUtil.attach(getWindow(), mPanelRoot, mPlusIv, mSendEdt,
                     new KPSwitchConflictUtil.SwitchClickListener() {
                         @Override
                         public void onClickSwitch(View v, boolean switchToPanel) {

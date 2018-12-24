@@ -47,8 +47,12 @@ public class KPSwitchRootLayoutHandler {
     public KPSwitchRootLayoutHandler(final View rootView) {
         this.mTargetRootView = rootView;
         this.mStatusBarHeight = StatusBarHeightUtil.getStatusBarHeight(rootView.getContext());
-        final Activity activity = (Activity) rootView.getContext();
-        this.mIsTranslucentStatus = ViewUtil.isTranslucentStatus(activity);
+        if (rootView.getContext() instanceof Activity) {
+            final Activity activity = (Activity) rootView.getContext();
+            this.mIsTranslucentStatus = ViewUtil.isTranslucentStatus(activity.getWindow());
+        } else {
+            this.mIsTranslucentStatus = false;
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

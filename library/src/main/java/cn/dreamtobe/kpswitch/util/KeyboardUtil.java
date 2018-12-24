@@ -28,6 +28,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
 import cn.dreamtobe.kpswitch.IPanelHeightTarget;
@@ -159,17 +160,17 @@ public class KeyboardUtil {
      * @see #saveKeyboardHeight(Context, int)
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Activity activity,
+    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Window window,
                                                                  IPanelHeightTarget target,
                                                                  /* Nullable */
                                                                  OnKeyboardShowingListener lis) {
-        final ViewGroup contentView = activity.findViewById(android.R.id.content);
-        final boolean isFullScreen = ViewUtil.isFullScreen(activity);
-        final boolean isTranslucentStatus = ViewUtil.isTranslucentStatus(activity);
-        final boolean isFitSystemWindows = ViewUtil.isFitsSystemWindows(activity);
+        final ViewGroup contentView = window.findViewById(android.R.id.content);
+        final boolean isFullScreen = ViewUtil.isFullScreen(window);
+        final boolean isTranslucentStatus = ViewUtil.isTranslucentStatus(window);
+        final boolean isFitSystemWindows = ViewUtil.isFitsSystemWindows(window);
 
         // get the screen height.
-        final Display display = activity.getWindowManager().getDefaultDisplay();
+        final Display display = window.getWindowManager().getDefaultDisplay();
         final int screenHeight;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             final Point screenSize = new Point();
@@ -196,9 +197,9 @@ public class KeyboardUtil {
     /**
      * @see #attach(Activity, IPanelHeightTarget, OnKeyboardShowingListener)
      */
-    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Activity activity,
+    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Window window,
                                                                  IPanelHeightTarget target) {
-        return attach(activity, target, null);
+        return attach(window, target, null);
     }
 
     /**

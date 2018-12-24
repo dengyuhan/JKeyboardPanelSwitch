@@ -68,8 +68,8 @@ public class ChattingResolvedHandleByPlaceholderActivity extends AppCompatActivi
         }
         // ********* Above code Just for Demo Test, do not need to adapt in your code. ************
 
-        KeyboardUtil.attach(this, panelRoot);
-        KPSwitchConflictUtil.attach(panelRoot, plusIv, sendEdt,
+        KeyboardUtil.attach(getWindow(), panelRoot);
+        KPSwitchConflictUtil.attach(getWindow(), panelRoot, plusIv, sendEdt,
                 new KPSwitchConflictUtil.SwitchClickListener() {
                     @Override
                     public void onClickSwitch(View v, boolean switchToPanel) {

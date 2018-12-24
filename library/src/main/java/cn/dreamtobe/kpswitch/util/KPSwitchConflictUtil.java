@@ -18,6 +18,7 @@ package cn.dreamtobe.kpswitch.util;
 import android.app.Activity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 
 import cn.dreamtobe.kpswitch.handler.KPSwitchFSPanelLayoutHandler;
 import cn.dreamtobe.kpswitch.handler.KPSwitchPanelLayoutHandler;
@@ -45,12 +46,12 @@ public class KPSwitchConflictUtil {
     private static boolean mIsInMultiWindowMode = false;
 
     /**
-     * @see #attach(View, View, View, SwitchClickListener)
+     * @see #attach(Window, View, View, View, SwitchClickListener)
      */
-    public static void attach(final View panelLayout,
-                              /* Nullable **/final View switchPanelKeyboardBtn,
-                              /* Nullable **/final View focusView) {
-        attach(panelLayout, switchPanelKeyboardBtn, focusView, null);
+    public static void attach(Window window, final View panelLayout,
+            /* Nullable **/final View switchPanelKeyboardBtn,
+            /* Nullable **/final View focusView) {
+        attach(window, panelLayout, switchPanelKeyboardBtn, focusView, null);
     }
 
     /**
@@ -58,8 +59,8 @@ public class KPSwitchConflictUtil {
      * non-layout-conflict.
      * <p/>
      * You do not have to use this method to attach non-layout-conflict, in other words, you can
-     * attach the action by yourself with invoke methods manually: {@link #showPanel(View)}、
-     * {@link #showKeyboard(View, View)}、{@link #hidePanelAndKeyboard(View)}, and in the case of
+     * attach the action by yourself with invoke methods manually: {@link #showPanel(Window, View)}、
+     * {@link #showKeyboard(Window, View, View)}、{@link #hidePanelAndKeyboard(View)}, and in the case of
      * don't invoke this method to attach, and if your activity with the fullscreen-theme, please
      * ensure your panel layout is {@link View#INVISIBLE} before the keyboard is going to show.
      *
@@ -69,19 +70,18 @@ public class KPSwitchConflictUtil {
      * @param focusView              the view will be focused or lose the focus.
      * @param switchClickListener    the click listener is used to listening the click event for
      *                               {@code switchPanelKeyboardBtn}.
-     * @see #attach(View, View, SwitchClickListener, SubPanelAndTrigger...)
+     * @see #attach(Window, View, View, SwitchClickListener, SubPanelAndTrigger...)
      */
-    public static void attach(final View panelLayout,
-                              /* Nullable **/final View switchPanelKeyboardBtn,
-                              /* Nullable **/final View focusView,
-                              /* Nullable **/final SwitchClickListener switchClickListener) {
-        final Activity activity = (Activity) panelLayout.getContext();
+    public static void attach(final Window window, final View panelLayout,
+            /* Nullable **/final View switchPanelKeyboardBtn,
+            /* Nullable **/final View focusView,
+            /* Nullable **/final SwitchClickListener switchClickListener) {
 
         if (switchPanelKeyboardBtn != null) {
             switchPanelKeyboardBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final boolean switchToPanel = switchPanelAndKeyboard(panelLayout, focusView);
+                    final boolean switchToPanel = switchPanelAndKeyboard(window, panelLayout, focusView);
                     if (switchClickListener != null) {
                         switchClickListener.onClickSwitch(v, switchToPanel);
                     }
@@ -89,7 +89,7 @@ public class KPSwitchConflictUtil {
             });
         }
 
-        if (isHandleByPlaceholder(activity)) {
+        if (isHandleByPlaceholder(window)) {
             focusView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -108,18 +108,18 @@ public class KPSwitchConflictUtil {
     }
 
     /**
-     * The same to {@link #attach(View, View, SwitchClickListener, SubPanelAndTrigger...)}.
+     * The same to {@link #attach(Window, View, View, SwitchClickListener, SubPanelAndTrigger...)}.
      */
-    public static void attach(final View panelLayout,
+    public static void attach(Window window, final View panelLayout,
                               final View focusView,
                               SubPanelAndTrigger... subPanelAndTriggers) {
-        attach(panelLayout, focusView, null, subPanelAndTriggers);
+        attach(window, panelLayout, focusView, null, subPanelAndTriggers);
     }
 
     /**
      * If you have multiple sub-panels in the {@code panelLayout}, you can use this method to simply
-     * attach them to non-layout-conflict. otherwise you can use {@link #attach(View, View, View)}
-     * or {@link #attach(View, View, View, SwitchClickListener)}.
+     * attach them to non-layout-conflict. otherwise you can use {@link #attach(Window, View, View, View)}
+     * or {@link #attach(Window, View, View, View, SwitchClickListener)}.
      *
      * @param panelLayout         the layout of panel.
      * @param focusView           the view will be focused or lose the focus.
@@ -128,19 +128,18 @@ public class KPSwitchConflictUtil {
      * @param subPanelAndTriggers the array of the trigger-toggle-view and
      *                            the sub-panel which bound trigger-toggle-view.
      */
-    public static void attach(final View panelLayout,
+    public static void attach(Window window, final View panelLayout,
                               final View focusView,
                               /** Nullable **/final SwitchClickListener switchClickListener,
                               SubPanelAndTrigger... subPanelAndTriggers) {
-        final Activity activity = (Activity) panelLayout.getContext();
 
         for (SubPanelAndTrigger subPanelAndTrigger : subPanelAndTriggers) {
 
-            bindSubPanel(subPanelAndTrigger, subPanelAndTriggers,
+            bindSubPanel(window, subPanelAndTrigger, subPanelAndTriggers,
                     focusView, panelLayout, switchClickListener);
         }
 
-        if (KPSwitchConflictUtil.isHandleByPlaceholder(activity)) {
+        if (KPSwitchConflictUtil.isHandleByPlaceholder(window)) {
             focusView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -159,7 +158,7 @@ public class KPSwitchConflictUtil {
     }
 
     /**
-     * @see #attach(View, View, SwitchClickListener, SubPanelAndTrigger...)
+     * @see #attach(Window, View, View, SwitchClickListener, SubPanelAndTrigger...)
      */
     public static class SubPanelAndTrigger {
         /**
@@ -184,11 +183,10 @@ public class KPSwitchConflictUtil {
      * @param panelLayout the layout of panel.
      * @see KPSwitchPanelLayoutHandler
      */
-    public static void showPanel(final View panelLayout) {
-        final Activity activity = (Activity) panelLayout.getContext();
+    public static void showPanel(Window window, final View panelLayout) {
         panelLayout.setVisibility(View.VISIBLE);
-        if (activity.getCurrentFocus() != null) {
-            KeyboardUtil.hideKeyboard(activity.getCurrentFocus());
+        if (window.getCurrentFocus() != null) {
+            KeyboardUtil.hideKeyboard(window.getCurrentFocus());
         }
     }
 
@@ -199,11 +197,10 @@ public class KPSwitchConflictUtil {
      * @param panelLayout the layout of panel.
      * @param focusView   the view will be focused.
      */
-    public static void showKeyboard(final View panelLayout, final View focusView) {
-        final Activity activity = (Activity) panelLayout.getContext();
+    public static void showKeyboard(Window window, final View panelLayout, final View focusView) {
 
         KeyboardUtil.showKeyboard(focusView);
-        if (isHandleByPlaceholder(activity)) {
+        if (isHandleByPlaceholder(window)) {
             panelLayout.setVisibility(View.INVISIBLE);
         } else if (mIsInMultiWindowMode) {
             panelLayout.setVisibility(View.GONE);
@@ -224,12 +221,12 @@ public class KPSwitchConflictUtil {
      * @param focusView   the view will be focused or lose the focus.
      * @return If true, switch to showing {@code panelLayout}; If false, switch to showing Keyboard.
      */
-    public static boolean switchPanelAndKeyboard(final View panelLayout, final View focusView) {
+    public static boolean switchPanelAndKeyboard(Window window, final View panelLayout, final View focusView) {
         boolean switchToPanel = panelLayout.getVisibility() != View.VISIBLE;
         if (!switchToPanel) {
-            showKeyboard(panelLayout, focusView);
+            showKeyboard(window, panelLayout, focusView);
         } else {
-            showPanel(panelLayout);
+            showPanel(window, panelLayout);
         }
 
         return switchToPanel;
@@ -256,11 +253,11 @@ public class KPSwitchConflictUtil {
      * This listener is used to listening the click event for a view which is received the click
      * event to switch between Panel and Keyboard.
      *
-     * @see #attach(View, View, View, SwitchClickListener)
+     * @see #attach(Window, View, View, View, SwitchClickListener)
      */
     public interface SwitchClickListener {
         /**
-         * @param v The view that was clicked.
+         * @param v             The view that was clicked.
          * @param switchToPanel If true, switch to showing Panel; If false, switch to showing
          *                      Keyboard.
          */
@@ -280,15 +277,15 @@ public class KPSwitchConflictUtil {
         return isFullScreen || (isTranslucentStatus && !isFitsSystem);
     }
 
-    static boolean isHandleByPlaceholder(final Activity activity) {
-        return isHandleByPlaceholder(ViewUtil.isFullScreen(activity),
-                ViewUtil.isTranslucentStatus(activity), ViewUtil.isFitsSystemWindows(activity));
+    static boolean isHandleByPlaceholder(final Window window) {
+        return isHandleByPlaceholder(ViewUtil.isFullScreen(window),
+                ViewUtil.isTranslucentStatus(window), ViewUtil.isFitsSystemWindows(window));
     }
 
-    private static void bindSubPanel(final SubPanelAndTrigger subPanelAndTrigger,
+    private static void bindSubPanel(final Window window, final SubPanelAndTrigger subPanelAndTrigger,
                                      final SubPanelAndTrigger[] subPanelAndTriggers,
                                      final View focusView, final View panelLayout,
-                                     /* Nullable */final SwitchClickListener switchClickListener) {
+            /* Nullable */final SwitchClickListener switchClickListener) {
 
         final View triggerView = subPanelAndTrigger.triggerView;
         final View boundTriggerSubPanelView = subPanelAndTrigger.subPanelView;
@@ -304,7 +301,7 @@ public class KPSwitchConflictUtil {
 
                         // bound-trigger panel is visible.
                         // to show keyboard.
-                        KPSwitchConflictUtil.showKeyboard(panelLayout, focusView);
+                        KPSwitchConflictUtil.showKeyboard(window, panelLayout, focusView);
                         switchToPanel = false;
 
                     } else {
@@ -315,7 +312,7 @@ public class KPSwitchConflictUtil {
                 } else {
                     // panel is gone.
                     // to show panel.
-                    KPSwitchConflictUtil.showPanel(panelLayout);
+                    KPSwitchConflictUtil.showPanel(window, panelLayout);
                     switchToPanel = true;
 
                     // to show bound-trigger panel.

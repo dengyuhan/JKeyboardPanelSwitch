@@ -21,4 +21,6 @@
     <string name="ignore_recommend_panel_height_cb_text">Ignore guaranteeing the panel height equal to the keyboard height</string>
     <string name="mark_panel1_to_img">照片-面板1</string>
     <string name="several_sub_panels_cb_text">There are several sub-panels in one page</string>
+
+    <string name="activity_dialog_example">Dialog示例</string>
 </resources>
