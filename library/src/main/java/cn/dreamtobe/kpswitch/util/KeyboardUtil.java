@@ -160,11 +160,12 @@ public class KeyboardUtil {
      * @see #saveKeyboardHeight(Context, int)
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Window window,
+    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Activity activity,
                                                                  IPanelHeightTarget target,
                                                                  /* Nullable */
                                                                  OnKeyboardShowingListener lis) {
-        final ViewGroup contentView = window.findViewById(android.R.id.content);
+        final Window window = activity.getWindow();
+        final ViewGroup contentView = activity.findViewById(android.R.id.content);
         final boolean isFullScreen = ViewUtil.isFullScreen(window);
         final boolean isTranslucentStatus = ViewUtil.isTranslucentStatus(window);
         final boolean isFitSystemWindows = ViewUtil.isFitsSystemWindows(window);
@@ -197,9 +198,9 @@ public class KeyboardUtil {
     /**
      * @see #attach(Activity, IPanelHeightTarget, OnKeyboardShowingListener)
      */
-    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Window window,
+    public static ViewTreeObserver.OnGlobalLayoutListener attach(final Activity activity,
                                                                  IPanelHeightTarget target) {
-        return attach(window, target, null);
+        return attach(activity, target, null);
     }
 
     /**

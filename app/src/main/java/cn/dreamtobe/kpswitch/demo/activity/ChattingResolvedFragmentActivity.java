@@ -94,7 +94,7 @@ public class ChattingResolvedFragmentActivity extends FragmentActivity {
         }
         // ********* Above code Just for Demo Test, do not need to adapt in your code. ************
 
-        KeyboardUtil.attach(getWindow(), mPanelRoot,
+        KeyboardUtil.attach(this, mPanelRoot,
                 // Add keyboard showing state callback, do like this when you want to listen in the
                 // keyboard's show/hide change.
                 new KeyboardUtil.OnKeyboardShowingListener() {

@@ -1,5 +1,6 @@
 package cn.dreamtobe.kpswitch.demo.activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Build;
@@ -22,6 +23,8 @@ public class ExampleDialog extends Dialog {
     private EditText sendEdt;
     private ImageView plusIv;
 
+    private Activity activity;
+
     public ExampleDialog(Context context) {
         super(context, R.style.Theme_Dialog_NoTitle);
         init(context);
@@ -34,6 +37,7 @@ public class ExampleDialog extends Dialog {
 
 
     private void init(Context context) {
+        this.activity = (Activity) context;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -47,7 +51,7 @@ public class ExampleDialog extends Dialog {
         plusIv = (ImageView) findViewById(R.id.plus_iv);
 
 
-        KeyboardUtil.attach(getWindow(), panelRoot);
+        KeyboardUtil.attach(activity, panelRoot);
         KPSwitchConflictUtil.attach(getWindow(), panelRoot, plusIv, sendEdt,
                 new KPSwitchConflictUtil.SwitchClickListener() {
                     @Override
